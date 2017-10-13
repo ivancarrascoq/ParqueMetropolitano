@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<!--diseno-->           
+
+<script>
+    $(window).resize(function(){
+        if ($(window).width() < 500) {
+            $(".change-class").addClass('hidden');
+        }
+        else {
+        $(".navbar-brand").removeClass('hidden');
+        };
+    });
+
+$(document).ready(function(){
+
+        if ($(window).width() < 500) {
+            $(".navbar-brand").addClass('hidden');
+        }
+        else {
+        $(".navbar-brand").removeClass('hidden');
+        };
+});
+</script>
+
+
+
+
+<style>
+.row {/*color: #337ab7;*/}
+.row1 {    background-color: #eee;}
+.row2 {    background-color: none;}    
+</style>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">&Uacute;ltima captura: {#{actual.fecha|date:"d/m/o H:i"}#} {{estanque.fecha|date:"d/m/o H:i"}}</h2>
+        <!--h1>{{ hour }} {{ ping.first.created_at }} {{ping.temperatura }}</h1-->
+        <h1>{#{embalse.first.fecha|date:"Y-m-d h:m:s" }#} {#{hum.last.humedad}#}</h1>
+                </div>
+            </div>
+{% endblock title %}
+
+{% block content %}
+
+<!--start array--->
+
+<!-----estanqe, embalse----->
+
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>S1EA (Estanque Alto)</legend>
+        <div class="col-xs-9" style="padding-left: 0px;">
+          <div class="row row1"><div class="col-xs-6">Volumen Actual</div><div class="col-xs-6">{{ estanque.nivel_m3 }} [m<sup>3</sup>]</div></div>
+          <div class="row row2"><div class="col-xs-6">Tasa {% if caudal_es >= 0 %}Llenado{% else %}Vaciado{% endif %}</div><div class="col-xs-6">{{ caudal_es }} [m<sup>3</sup>/min]</div></div>
+          <div class="row row1"><div class="col-xs-6">Altura</div><div class="col-xs-6">{{actual_144.es_alt|floatformat:"2"}} [mts]</div></div>
+          <div class="row"><div class="col-xs-6">% de llenado</div><div class="col-xs-6">{{ es_percent|floatformat:"1" }} [%]</div></div>
+        </div>
+        <div class="col-xs-3" style="padding-left: 0px;">
+          <svg id="fillgauge1" width="100" height="100"></svg><script language="JavaScript">var config1 = liquidFillGaugeDefaultSettings();config1.circleColor = "#192b2f";config1.textColor = "#192b2f";config1.waveTextColor = "#FFFFFF";config1.waveColor = "#192b2f";config1.circleThickness = 0.005;config1.textVertPosition = 0.5;config1.waveAnimateTime = 1000;var gauge2= loadLiquidFillGauge("fillgauge1",{{es_percent|floatformat:"1"}}, config1);</script>
+        </div>
+      </fieldset>
+    </div>
+  <!--/div>
+  <div class="row circleStats"-->
+    <div class="col-sm-6">
+      <fieldset><legend>N1EM (Embalse)</legend>
+        <div class="col-xs-9" style="padding-left: 0px;">
+          <div class="row row1"><div class="col-xs-6">Volumen Actual</div><div class="col-xs-6">{{ embalse.nivel_m3 }} [m<sup>3</sup>]</div></div>
+          <div class="row"><div class="col-xs-6">Tasa {% if caudal_em >= 0 %}Llenado{% else %}Vaciado{% endif %}</div><div class="col-xs-6">{{ caudal_em}} [m<sup>3</sup>/min]</div></div>
+          <div class="row row1"><div class="col-xs-6">Altura</div><div class="col-xs-6">{{actual_144.em_alt|floatformat:"2"}} [mts]</div></div>
+          <div class="row"><div class="col-xs-6">% de llenado</div><div class="col-xs-6">{{em_percent|floatformat:"1"}} [%]</div></div>
+        </div>
+        <div class="col-xs-3" style="padding-left: 0px;">
+          <svg id="fillgauge2" width="100" height="100"></svg><script language="JavaScript">var config2 = liquidFillGaugeDefaultSettings();config2.circleColor = "#11094d";config2.textColor = "#11094d";config2.waveTextColor = "#FFFFFF";config2.waveColor = "#11094d";config2.circleThickness = 0.005;config2.textVertPosition = 0.5;config2.waveAnimateTime = 1000;var gauge3= loadLiquidFillGauge("fillgauge2",{{em_percent|floatformat:"1"}}, config2);</script>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+
+
+
+<!---->
+
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Temperatura</legend>
+        <div class="col-xs-9" style="padding-left: 0px;">
+          <div class="row"><div class="col-xs-6"></div><div class="col-xs-3">Valor</div><div class="col-xs-3">Hora</div></div>
+          <div class="row row1"><div class="col-xs-6">T. Actual</div><div class="col-xs-6">{{actual.temperatura}}{#{ tactual.temperatura }#} [&#x2103;]</div></div>
+          <div class="row"><div class="col-xs-6">T. M&aacute;x</div><div class="col-xs-3">{{actual_144.tmax}} [&#x2103;]</div><div class="col-xs-3">{{actual_144.tmaxh|date:"H:i"}}{#{ tmax.fecha|date:"H:i" }#}</div></div>
+          <div class="row row1"><div class="col-xs-6">T. Min</div><div class="col-xs-3">{{actual_144.tmin}} [&#x2103;]</div><div class="col-xs-3">{{ actual_144.tminh|date:"H:i" }}</div></div>
+          <div class="row"><div class="col-xs-6">&Iacute;ndice de Calor</div><div class="col-xs-6">{{actual_144.i_calor}} [&#x2103;]</div></div>
+          <div class="row row1"><div class="col-xs-6">&Iacute;ndice de Fr&iacute;o</div><div class="col-xs-6">{{actual_144.i_frio}} [&#x2103;]</div></div>
+        </div>
+        <div class="col-xs-3" style="padding-left: 0px;">
+          <div id="thermo"></div>
+        </div>
+      </fieldset>
+    </div>
+  <!--/div>
+  <div class="row circleStats"-->
+    <div class="col-sm-6">
+      <fieldset><legend>Presi&oacute;n</legend>
+        <div class="row row1"><div class="col-xs-6">P. nivel mar Actual</div><div class="col-xs-6">{{presion_nm|floatformat:"1"}}{#{ presion.presion_nm }#} [mb]</div></div>
+        <div class="row"><div class="col-xs-6">P. estaci&oacute;n Actual</div><div class="col-xs-6">{{actual.presion}}{#{ presion.presion }#} [mb]</div></div>
+        <div class="row row1"><div class="col-xs-6">Tendencia 3 &uacute;ltimas horas</div><div class="col-xs-6">{{actual_144.p_tendencia}}</div></div>      
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Humedad Relativa</legend>
+        <div class="row"><div class="col-xs-6"></div><div class="col-xs-3">Valor</div><div class="col-xs-3">Hora</div></div>
+        <div class="row row1"><div class="col-xs-6">H.R. Actual</div><div class="col-xs-3">{{ actual.humedad}}%</div></div>
+        <div class="row"><div class="col-xs-6">H.R. M&aacute;x</div><div class="col-xs-3">{#{hmax.humedad}#}{{actual_144.hmax}}%</div><div class="col-xs-3">{#{hmax.fecha|date:"H:i"}#}{{actual_144.hmaxh|date:"H:i"}}</div></div>
+        <div class="row row1"><div class="col-xs-6">H.R. M&iacute;n</div><div class="col-xs-3">{{actual_144.hmin}}%</div><div class="col-xs-3">{{actual_144.hminh|date:"H:i"}}</div></div>      
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>Radiaci&oacute;n</legend>
+        <div class="row"><div class="col-xs-6"></div><div class="col-xs-3">Valor</div><div class="col-xs-3">Hora</div></div>
+        <div class="row row1"><div class="col-xs-6">R. Actual</div><div class="col-xs-3">{{actual.radiacion}} [W/m<sup>2</sup>]</div></div>
+        <div class="row"><div class="col-xs-6">R. M&aacute;x</div><div class="col-xs-3">{{actual_144.rmax}}{#{rmax.radiacion}#} [W/m<sup>2</sup>]</div><div class="col-xs-3">{#{rmax.fecha|date:"H:i"}#}{{actual_144.rmaxh|date:"H:i"}}</div></div>
+        <!--div class="row"><div class="col-sm-6">R. M&iacute;n</div><div class="col-xs-6">{#{rmin.radiacion}#} [W/m<sup>2</sup>] - {{rmin.fecha|date:"H:i"}}</div></div-->
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Viento</legend>
+        <div class="col-xs-9" style="padding-left: 0px;">
+          <div class="row row1"><div class="col-xs-6">Velocidad media</div><div class="col-xs-6">{{ viento.vel }} [Km/h]</div></div>
+          <div class="row"><div class="col-xs-6">Direcci&oacute;n</div><div class="col-xs-6">{{viento.simbolo}}</div></div>
+          <div class="row row1"><div class="col-xs-6">R&aacute;fagas</div><div class="col-xs-6">{{viento.raf}} [km/h]</div></div>
+        </div>
+        <div class="col-xs-3" style="padding-left: 0px;">
+          <div id="compass"><div id="arrow"></div></div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>PAR</legend>
+        <div class="row"><div class="col-xs-6"></div><div class="col-xs-3">Valor</div><div class="col-xs-3">Hora</div></div>
+        <div class="row row1"><div class="col-xs-6">PAR Actual</div><div class="col-xs-3">{{actual.par}} [&#181;mol/m<sup>2</sup>/s]</div></div>
+        <div class="row"><div class="col-xs-6">PAR M&aacute;x</div><div class="col-xs-3">{#{parmax.par}#}{{actual_144.parmax}} [&#181;mol/m<sup>2</sup>/s]</div><div class="col-xs-3">{#{parmax.fecha|date:"H:i"}#}{{actual_144.parmaxh|date:"H:i"}}</div></div>
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="row circleStats">        
+    <div class="col-sm-6">
+      <fieldset><legend>Precipitaciones</legend>
+        <div class="row row1"><div class="col-xs-6">P. Actual</div><div class="col-xs-6">{{precip.lluvia}} [mm]</div></div>
+        <div class="row"><div class="col-xs-6">P. Intensidad</div><div class="col-xs-6">{{precip.intensidad}} [mm/h]</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>ETo</legend>
+        <div class="row row1"><div class="col-xs-6">ETo Ayer</div><div class="col-xs-6">{{eto.ETo}} [mm/d&iacute;a]</div></div>
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="row circleStats">
+    <div class="col-sm-12" style="margin-bottom: 15px;">
+      <fieldset><legend>Punto de Rocio</legend>
+        <div class="row row1"><div class="col-xs-6">Actual</div><div class="col-xs-6">{{actual.puntorocio}} [&#x2103;]</div></div>
+      </fieldset>         
+    </div>
+  </div>
+
+
+<!-- thermo -->
+<script>
+var width = 80,
+    height = 150,
+    maxTemp = 40,
+    minTemp = -5,
+    currentTemp = {{actual.temperatura}};
+
+var bottomY = height - 5,
+    topY = 5,
+    bulbRadius = 20,
+    tubeWidth = 21.5,
+    tubeBorderWidth = 1,
+    mercuryColor = "rgb(17,9,77)",
+    innerBulbColor = "rgb(53, 80, 170)"
+    tubeBorderColor = "#999999";
+
+var bulb_cy = bottomY - bulbRadius,
+bulb_cx = width/2,
+top_cy = topY + tubeWidth/2;
+var svg = d3.select("#thermo")
+.append("svg")
+.attr("width", width)
+.attr("height", height);
+var defs = svg.append("defs");
+// Define the radial gradient for the bulb fill colour
+var bulbGradient = defs.append("radialGradient")
+.attr("id", "bulbGradient")
+.attr("cx", "50%")
+.attr("cy", "50%")
+.attr("r", "50%")
+.attr("fx", "50%")
+.attr("fy", "50%");
+bulbGradient.append("stop")
+.attr("offset", "0%")
+.style("stop-color", innerBulbColor);
+bulbGradient.append("stop")
+.attr("offset", "90%")
+.style("stop-color", mercuryColor);
+// Circle element for rounded tube top
+svg.append("circle")
+  .attr("r", tubeWidth/2)
+  .attr("cx", width/2)
+  .attr("cy", top_cy)
+  .style("fill", "#FFFFFF")
+  .style("stroke", tubeBorderColor)
+  .style("stroke-width", tubeBorderWidth + "px");
+// Rect element for tube
+svg.append("rect")
+  .attr("x", width/2 - tubeWidth/2)
+  .attr("y", top_cy)
+  .attr("height", bulb_cy - top_cy)
+  .attr("width", tubeWidth)
+  .style("shape-rendering", "crispEdges")
+  .style("fill", "#FFFFFF")
+  .style("stroke", tubeBorderColor)
+  .style("stroke-width", tubeBorderWidth + "px");
+// White fill for rounded tube top circle element
+// to hide the border at the top of the tube rect element
+svg.append("circle")
+  .attr("r", tubeWidth/2 - tubeBorderWidth/2)
+  .attr("cx", width/2)
+  .attr("cy", top_cy)
+  .style("fill", "#FFFFFF")
+  .style("stroke", "none")
+// Main bulb of thermometer (empty), white fill
+svg.append("circle")
+  .attr("r", bulbRadius)
+  .attr("cx", bulb_cx)
+  .attr("cy", bulb_cy)
+  .style("fill", "#FFFFFF")
+  .style("stroke", tubeBorderColor)
+  .style("stroke-width", tubeBorderWidth + "px");
+// Rect element for tube fill colour
+svg.append("rect")
+  .attr("x", width/2 - (tubeWidth - tubeBorderWidth)/2)
+  .attr("y", top_cy)
+  .attr("height", bulb_cy - top_cy)
+  .attr("width", tubeWidth - tubeBorderWidth)
+  .style("shape-rendering", "crispEdges")
+  .style("fill", "#FFFFFF")
+  .style("stroke", "none");
+// Scale step size
+var step = 5;
+// Determine a suitable range of the temperature scale
+var domain = [
+  step * Math.floor(minTemp / step),
+  step * Math.ceil(maxTemp / step)
+  ];
+if (minTemp - domain[0] < 0.66 * step)
+  domain[0] -= step;
+if (domain[1] - maxTemp < 0.66 * step)
+  domain[1] += step;
+// D3 scale object
+var scale = d3.scale.linear()
+  .range([bulb_cy - bulbRadius/2 - 8.5, top_cy])
+  .domain(domain);
+// Max and min temperature lines
+[minTemp, maxTemp].forEach(function(t) {
+  var isMax = (t == maxTemp),
+      label = (isMax ? "max" : "min"),
+      textCol = (isMax ? "rgb(230, 0, 0)" : "rgb(0, 0, 230)"),
+      textOffset = (isMax ? -4 : 4);
+  svg.append("line")
+    .attr("id", label + "Line")
+    .attr("x1", width/2 - tubeWidth/2)
+    .attr("x2", width/2 + tubeWidth/2 + 22)
+    .attr("y1", scale(t))
+    .attr("y2", scale(t))
+    .style("stroke", tubeBorderColor)
+    .style("stroke-width", "1px")
+    .style("shape-rendering", "crispEdges");
+  svg.append("text")
+    .attr("x", width/2 + tubeWidth/2 + 2)
+    .attr("y", scale(t) + textOffset)
+    .attr("dy", isMax ? null : "0.75em")
+    .text(label)
+    .style("fill", textCol)
+    .style("font-size", "11px")
+});
+var tubeFill_bottom = bulb_cy,
+    tubeFill_top = scale(currentTemp);
+// Rect element for the red mercury column
+svg.append("rect")
+  .attr("x", width/2 - (tubeWidth - 10)/2)
+  .attr("y", tubeFill_top)
+  .attr("width", tubeWidth - 10)
+  .attr("height", tubeFill_bottom - tubeFill_top)
+  .style("shape-rendering", "crispEdges")
+  .style("fill", mercuryColor)
+// Main thermometer bulb fill
+svg.append("circle")
+  .attr("r", bulbRadius - 6)
+  .attr("cx", bulb_cx)
+  .attr("cy", bulb_cy)
+  .style("fill", "url(#bulbGradient)")
+  .style("stroke", mercuryColor)
+  .style("stroke-width", "2px");
+// Values to use along the scale ticks up the thermometer
+var tickValues = d3.range((domain[1] - domain[0])/step + 1).map(function(v) { return domain[0] + v * step; });
+// D3 axis object for the temperature scale
+var axis = d3.svg.axis()
+  .scale(scale)
+  .innerTickSize(7)
+  .outerTickSize(0)
+  .tickValues(tickValues)
+  .orient("left");
+// Add the axis to the image
+var svgAxis = svg.append("g")
+  .attr("id", "tempScale")
+  .attr("transform", "translate(" + (width/2 - tubeWidth/2) + ",0)")
+  .call(axis);
+// Format text labels
+svgAxis.selectAll(".tick text")
+    .style("fill", "#777777")
+    .style("font-size", "10px");
+// Set main axis line to no stroke or fill
+svgAxis.select("path")
+  .style("stroke", "none")
+  .style("fill", "none")
+// Set the style of the ticks 
+svgAxis.selectAll(".tick line")
+  .style("stroke", tubeBorderColor)
+  .style("shape-rendering", "crispEdges")
+  .style("stroke-width", "1px");
+</script>
+<!--compass-->
+<style>
+#compass {
+  width: 150px;
+  height: 150px;
+  background-image:url("{% static 'images/rosa-bn.jpg' %}");
+  background-repeat: no-repeat;
+  position: relative;
+}
+#arrow {
+  background-image:url("{% static 'images/needle7.png' %}");
+  width: 150px;
+  height: 64px;
+#  background-color:#F44336;
+  position: absolute;
+  top: 42px;
+  left: 2px;
+  -webkit-transform:rotate({{viento.grado}}deg);
+  -moz-transform:rotate({{viento.grado}}deg);
+  -o-transform:rotate({{viento.grado}}deg);
+  -ms-transform:rotate({{viento.grado}}deg);
+
+  -moz-transition: all 1s ease;
+  -webkit-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+/*#compass:hover #arrow {
+  -webkit-transform:rotate(-67deg);
+  -moz-transform:rotate(-67deg);
+  -o-transform:rotate(-67deg);
+  -ms-transform:rotate(-67deg);
+}*/
+
+</style>
+
+
+{% endblock %}

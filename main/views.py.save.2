@@ -1,0 +1,210 @@
+from django.shortcuts import render
+
+# Create your views here.
+from django.http import HttpResponse
+from models import EmbalseTest
+from models import EstanqueTest
+
+#views
+from models import NivelEmbalseV
+from models import NivelEstanqueV  
+#pmet
+#from models import TemperaturaV
+#from models import TempMaxV
+#from models import TempMinV
+from models import PresionV
+#from models import HumedadV
+#from models import HumMaxV
+#from models import HumMinV
+#from models import RadiacionV
+#from models import RadMaxV
+#from models import RadMinV
+from models import VientoV
+#from models import ParV
+#from models import ParMaxV
+from models import PrecipitacionV
+from models import ETo
+from models import TempRocioV
+#from models import CaudalEmbalseV
+#from models import CaudalEstanqueV
+from models import SensacionTermicaT
+
+from datetime import datetime
+from django.utils.dateformat import DateFormat
+from django.utils.formats import get_format
+#import pdb; pdb.set_trace()
+# Create your views here.
+
+
+def index(request):
+    return HttpResponse('<h1>Sparus</h1>')
+    print "test..."
+
+def pmet(request):
+    print 'iniciando'
+    #    hour = '12:30pm'#    height = 30.2#    id = 12#    embalse = EmbalseTest.objects.all()
+    embalse = NivelEmbalseV.objects.last
+    q_em = NivelEmbalseV.objects.order_by('-fecha')[0].nivel_m3
+    q_em_b4 = NivelEmbalseV.objects.order_by('-fecha')[1].nivel_m3
+    caudal_em = (float(q_em) - float(q_em_b4))/10
+#    print caudal_em
+
+    em_percent = float(embalse().nivel_m3) / float('19795.4') * 100
+#    estanque = NivelEstanqueV.objects.order_by('-fecha').first
+    estanque = NivelEstanqueV.objects.last
+    q_es = NivelEstanqueV.objects.order_by('-fecha')[0].nivel_m3         
+    q_es_b4 = NivelEstanqueV.objects.order_by('-fecha')[1].nivel_m3             
+    caudal_es = (float(q_es) - float(q_es_b4))/10
+#    print caudal_es
+
+    es_percent = float(estanque().nivel_m3) / float('3000.0') * 100
+    #hum = HumMaxV.objects.all()#    context = { 'hour': hour, 'height': height, 'id': id, 'ping': ping}#    return HttpResponse('Parque Metropolitano')#    context = { 'embalse': embalse, 'estanque': estanque, 'hum': hum }#    tactual = TemperaturaV.objects.all().order_by('-fecha').first#    tmax = TempMaxV.objects.order_by('-fecha').first#    tmin = TempMinV.objects.order_by('-fecha').first#    presion = PresionV.objects.order_by('-fecha').first#    hactual = HumedadV.objects.order_by('-fecha').first#    hmax = HumMaxV.objects.order_by('-fecha').first#    hmin = HumMinV.objects.order_by('-fecha').first#    ractual = RadiacionV.objects.order_by('-fecha').first#    rmax = RadMaxV.objects.order_by('-fecha').first#    rmin = RadMinV.objects.order_by('-fecha').first#    viento = VientoV.objects.order_by('-fecha').first#    par = ParV.objects.order_by('-fecha').first#    parmax = ParMaxV.objects.order_by('-fecha').first#    precip = PrecipitacionV.objects.order_by('-fecha').first#    procio = TempRocioV.objects.order_by('-fecha').first#    eto = ETo.objects.order_by('-id').first#    caudal_em = CaudalEmbalseV.objects.order_by('-fecha').first#    caudal_es = CaudalEstanqueV.objects.order_by('-fecha').first
+
+    emt = EmbalseTest.objects.order_by('-fecha')[:144]
+#    emt = EmbalseTest.objects.last
+#    tactual = TemperaturaV.objects.last
+    actual = emt[1]
+########
+    actual_144 = dict()
+    print estanque#distancia_mm
+#    actual_144['es_alt'] = 3750 - estanque.distancia_mm
+    actual_144['tmax'] = 0
+    actual_144['tmin'] = actual.temperatura
+    actual_144['hmax'] = 0
+    actual_144['hmin'] = actual.humedad
+    actual_144['rmax'] = 0
+    actual_144['parmax'] = 0
+    for i in emt:
+        if actual_144['tmax'] < i.temperatura and actual.fecha.date().day == i.fecha.date().day:
+            actual_144['tmax'] = i.temperatura
+            actual_144['tmaxh'] = i.fecha
+#    for i in emt:
+        if actual_144['tmin'] > i.temperatura and actual.fecha.date().day == i.fecha.date().day:
+            actual_144['tmin'] = i.temperatura
+            actual_144['tminh'] = i.fecha
+#    for i in emt:
+        if actual_144['hmax'] < i.humedad and actual.fecha.date().day == i.fecha.date().day:
+            actual_144['hmax'] = i.humedad
+            actual_144['hmaxh'] = i.fecha
+#    for i in emt:
+        if actual_144['hmin'] > i.humedad and actual.fecha.date().day == i.fecha.date().day:
+            actual_144['hmin'] = i.humedad
+            actual_144['hminh'] = i.fecha
+#    for i in emt:
+        if actual_144['rmax'] < i.radiacion and actual.fecha.date().day == i.fecha.date().day:
+            actual_144['rmax'] = i.radiacion
+            actual_144['rmaxh'] = i.fecha
+#    for i in emt:
+        if actual_144['parmax'] < i.par and actual.fecha.date().day == i.fecha.date().day:
+            actual_144['parmax'] = i.par
+            actual_144['parmaxh'] = i.fecha
+    actual_144['lluvia'] = actual.lluvia
+    actual_144['lluvia_intensidad'] = float(actual_144['lluvia']) * 12
+
+
+    actual_144['i_calor'] = SensacionTermicaT.objects.order_by('-fecha')[0].calor
+    actual_144['i_frio'] = SensacionTermicaT.objects.order_by('-fecha')[0].frio
+
+    print actual_144
+#    print "actual"
+#    print actual
+#    em_level = round((3.9591*(4890 - (float(actual.analogo) * 487.5 - 1750  ))),1)#    print em_level#    print max(i.temperatura for i in emt)#    tmax = TempMaxV.objects.last#    tmax = max(i.temperatura for i in emt)#    tmax = emt.all().order_by('temperatura')[0]#    tmaxh = tmax.fecha #    print str(tmaxh) + " ; " + str(tmaxh)#    tmin = TempMinV.objects.last#    presion = PresionV.objects.last
+    presion_nm = float(actual.presion) * 1.0875
+#    hactual = HumedadV.objects.last#    hmax = HumMaxV.objects.last#    hmin = HumMinV.objects.last#    ractual = RadiacionV.objects.last#    rmax = RadMaxV.objects.last#    rmin = RadMinV.objects.last#    viento = VientoV.objects.last
+
+    viento_vel = round(float(actual.viento_vel) * 3.6,1)
+    viento_simbolo = simbolo(actual.viento_dir)
+    viento_raf = round(float(actual.viento_raf) * 3.6,1)
+    viento = {'vel': viento_vel, 'simbolo': viento_simbolo, 'raf': viento_raf}
+
+#    par = ParV.objects.last#    parmax = ParMaxV.objects.last
+
+    precip = PrecipitacionV.objects.last
+#    procio = TempRocioV.objects.last
+    eto = ETo.objects.last
+
+    print 'terminando consultas'
+    context = { 'embalse': embalse, 'estanque': estanque, 'actual_144': actual_144,
+    # 'tactual': tactual, 'tmax': tmax, 'tmin': tmin, 'presion': presion,
+    'presion_nm': presion_nm,
+    #'hactual': hactual,'hmax': hmax, 'hmin': hmin, 'ractual': ractual,'rmax': rmax, 'rmin': rmin,
+    'viento': viento,
+    #'par': par,'parmax': parmax, 
+    'precip': precip,
+    #'procio': procio,
+    'eto': eto, 
+    'caudal_em': caudal_em, 'caudal_es': caudal_es, 
+    'es_percent': es_percent, 'em_percent': em_percent, 'actual':actual  }
+
+    print 'enviando datos'
+    return render(request, 'index.html', context)
+#    print 'cargando index.html'
+
+
+def simbolo(viento_dir):
+    if viento_dir == 0:
+        viento_simbolo = 'N'
+    elif (viento_dir > 0 and viento_dir < 45):
+        viento_simbolo = 'NNE'
+    elif viento_dir == 45:
+        viento_simbolo = 'NE'
+    elif (viento_dir > 45 and viento_dir < 90):
+        viento_simbolo = 'ENE'
+    elif viento_dir == 90:
+        viento_simbolo = 'E'
+    elif (viento_dir > 90 and viento_dir < 135):
+        viento_simbolo = 'ESE'
+    elif (viento_dir >= 135 and viento_dir < 180):
+        viento_simbolo = 'SSE'
+    elif viento_dir == 180:
+        viento_simbolo = 'S'
+    elif (viento_dir > 180 and viento_dir < 225):
+        viento_simbolo = 'SSW'
+    elif (viento_dir >= 225 and viento_dir < 270):
+        viento_simbolo = 'WSW'
+    elif viento_dir == 270:
+        viento_simbolo = 'W'   
+    elif (viento_dir > 270 and viento_dir < 315):
+        viento_simbolo = 'WNW'  
+    elif (viento_dir >= 315 and viento_dir < 360):
+        viento_simbolo = 'NNW'  
+    else:
+        viento_simbolo = 'XXX'
+    return(viento_simbolo)
+
+#def graf(x):
+#      embalse = EmbalseTest.objects.all().order_by('-fecha')[:144]
+#      a1 = '<div id="graphdiv-' + x + '" style="clear:both;width:500px;height:200px;"></div>'
+#      a2 = '<script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv-' + x + '"),"fecha,'+x+'\n"'
+#      for i in embalse:
+#        a3 = a3 + '"' + i.fecha + ',' + i.temperatura + '\n"'
+#      a3 = a3 + ','
+
+def day(request):
+    nivel_em = NivelEmbalseV.objects.all().order_by('-fecha')[:144]
+    nivel_es = NivelEstanqueV.objects.all().order_by('-fecha')[:144]
+    eto = ETo.objects.all().order_by('-fecha')[:144]
+    embalse = EmbalseTest.objects.all().order_by('-fecha')[:144]
+    estanque = EstanqueTest.objects.all().order_by('-fecha')[:144]
+    context = { 'nivel_em': nivel_em,'nivel_es': nivel_es,'embalse': embalse, 'estanque': estanque, 'eto': eto }
+    return render(request, 'day.html', context)
+
+def week(request):
+    nivel_em = NivelEmbalseV.objects.all().order_by('-fecha')[:1008]
+    nivel_es = NivelEstanqueV.objects.all().order_by('-fecha')[:1008]
+    embalse = EmbalseTest.objects.all().order_by('-fecha')[:1008]
+    estanque = EstanqueTest.objects.all().order_by('-fecha')[:1008]
+    context = { 'nivel_em': nivel_em,'nivel_es': nivel_es,'embalse': embalse, 'estanque': estanque }            
+    return render(request, 'week.html', context)
+
+def month(request):
+    nivel_em = NivelEmbalseV.objects.all().order_by('-fecha')[:4320:3]
+    nivel_es = NivelEstanqueV.objects.all().order_by('-fecha')[:4320:3]
+    embalse = EmbalseTest.objects.all().order_by('-fecha')[:4320:3]
+    estanque = EstanqueTest.objects.all().order_by('-fecha')[:4320:3]
+    context = { 'nivel_em': nivel_em,'nivel_es': nivel_es,'embalse': embalse, 'estanque': estanque }
+    return render(request, 'month.html', context)
+
+
+def nivel(request):
+    return(1)

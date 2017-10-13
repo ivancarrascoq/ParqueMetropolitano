@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{#% load staticfiles %#}
+{#% load app_filters %#}
+{% load static %}
+{% block title %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Embalse</h1>
+	<!--h1>{{ hour }} {{ ping.first.created_at }} {{ping.temperatura }}</h1-->
+	<h1>{#{embalse.first.fecha|date:"Y-m-d h:m:s" }#} {#{hum.last.humedad}#}</h1>
+                </div>
+            </div>
+{% endblock title %}
+{% block content %}   
+  <div class="row circleStats">
+    <!--div class="col-md-2 col-sm-4 col-xs-6"-->
+      Registros procesados: {{ embalse.count }} 
+    <!--/div-->
+  </div>
+
+<br/>
+
+<!--start array--->
+
+
+<!-- Array 0 -->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv0" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv0"),"fecha,Nivel []\n"{% for i in nivel_em %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.nivel_m3 }}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Nivel",color: "violet",});</script></div></div>
+<br/><br/>
+
+
+<!-- Array 1 :presion-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv1" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv1"),"fecha,presi\u00f3n []..........\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.presion}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Presi\u00f3n",color: "black",});</script></div></div>
+<br/><br/>
+
+<!-- Array 2 :par-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv2" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv2"),"fecha,par []\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.par}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Par",color: "green",});</script></div></div>
+<br/><br/>
+
+<!-- Array 3 :viento_dir-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv3" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv3"),"fecha,dir viento\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.viento_dir}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Direcci\u00f3n Viento",color: "blue",});</script></div></div>
+<br/><br/>
+
+<!-- Array 4 :viento_vel-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv4" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv4"),"fecha,Vel. viento\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.viento_vel}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Velocidad Viento",color: "red",});</script></div></div>
+<br/><br/>
+
+<!-- Array 5 :viento_raf-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv5" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv5"),"fecha,raf. viento\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.viento_raf}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "R\u00e1faga Viento",color: "purple",});</script></div></div>
+<br/><br/>
+
+<!-- Array 6 :temperatura-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv6" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv6"),"fecha,temperatura\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.temperatura}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Temperatura",color: "orange",});</script></div></div>
+<br/><br/>
+
+<!-- Array 7 :humedad-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv7" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv7"),"fecha,humedad\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.humedad}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Humedad",color: "light blue",});</script></div></div>
+<br/><br/>
+
+<!-- Array 8 :puntorocio-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv8" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv8"),"fecha,punto roc\u00EDo\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.puntorocio}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Punto de Roc\u00EDo",color: "brown",});</script></div></div>
+<br/><br/>
+
+<!-- Array 9 :radiacion-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv9" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv9"),"fecha,radiaci\u00f3n\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.radiacion}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Radiaci\u00f3n",color: "salmon",});</script></div></div>
+<br/><br/>
+
+<!-- Array 10 :lluvia-->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv10" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv10"),"fecha,lluvia\n"{% for i in embalse %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.lluvia}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Lluvia",color: "red",});</script></div></div>
+
+<!--end array--->
+
+<div class="row">
+  <div class="col-lg-12"><h1 class="page-header">Estanque</h1></div>
+</div>
+
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6"><div id="graphdiv20" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv20"),"fecha,nivel\n"{% for i in nivel_es %}+"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.nivel_m3}}\n"{% endfor %},{rollPeriod: 1, showRangeSelector: true, ylabel: "Nivel",color: "red",});</script></div></div>
+
+
+
+{% endblock %}   

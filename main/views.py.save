@@ -1,0 +1,43 @@
+from django.shortcuts import render
+
+# Create your views here.
+from django.http import HttpResponse
+from models import EmbalseTest
+
+from models import HumMaxV
+
+from datetime import datetime
+from django.utils.dateformat import DateFormat
+from django.utils.formats import get_format
+
+# Create your views here.
+
+
+def index(request):
+    return HttpResponse('<h1>Sparus</h1>')
+    print "test..."
+
+def pmet(request):
+#    hour = '12:30pm'
+#    height = 30.2
+#    id = 12
+#    embalse = EmbalseTest.objects.all()
+    embalse = EmbalseTest.objects.all().order_by('-fecha')[:144]
+    hum = HumMaxV.objects.all()
+#    context = { 'hour': hour, 'height': height, 'id': id, 'ping': ping}
+#    return HttpResponse('Parque Metropolitano')
+    context = { 'embalse': embalse, 'hum': hum }
+    return render(request, 'index.html', context)
+
+def graf(x):
+  embalse = EmbalseTest.objects.all().order_by('-fecha')[:144]
+  a1 = '<div id="graphdiv-' + x + '" style="clear:both;width:500px;height:200px;"></div>'
+  a2 = '<script type="text/javascript">g = new Dygraph(document.getElementById("graphdiv-' + x + '"),"fecha,'+x+'\n"'
+  for i in embalse
+    a3 = a3 + "+i.fecha +','+i.temperatura+'\n"'
+  a3 = a3 + ','
+
+def lower(value):
+    """Removes all values of arg from the given string"""
+    return value.lower()
+

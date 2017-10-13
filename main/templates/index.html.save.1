@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{#% load staticfiles %#}
+{#% load app_filters %#}
+{% load static %}
+{% block title %}
+            <.div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Embalse</h1>
+	<!--h1>{{ hour }} {{ ping.first.created_at }} {{ping.temperatura }}</h1-->
+	<h1>{#{embalse.first.fecha|date:"Y-m-d h:m:s" }#} {#{hum.last.humedad}#}</h1>
+                </div>
+            </div>
+{% endblock title %}
+{% block content %}   
+  <div class="row circleStats">
+    <div class="col-md-2 col-sm-4 col-xs-6"><!--Temperatura:-->
+
+      Registros procesados: {{ embalse.count }} <!--b>{{'Tsando La MANO'|lower }}</b-->
+      <div id="graphdiv" style="clear:both;width:500px;height:200px;"></div>
+      <script type="text/javascript">
+        g = new Dygraph(
+          document.getElementById("graphdiv"),
+        "fecha,temperatura\n"
+	{% for i in embalse %}
+          +"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.temperatura }}\n"
+        {% endfor %},
+          {rollPeriod: 1, //title: 'Temperatura',showRangeSelector: true,
+           ylabel: 'Temperatura [C]',
+          // legend: 'always',
+           valueRange: [0.0, 45.0],
+           rangeSelectorHeight: 30,
+           rangeSelectorPlotStrokeColor: 'blue',
+           rangeSelectorPlotFillColor: 'lightblue',
+	   colors: "#ffffff", //color serie
+          }
+
+        );
+      </script>
+    </div>
+  </div>
+  <div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">PAR:</div>
+
+    <div id="graphdiv1" style="clear:both;"></div>
+    <script type="text/javascript">
+      g2 = new Dygraph(
+        document.getElementById("graphdiv1"),
+        "{% static 'temperatures.csv' %}", // path to CSV file
+        {rollPeriod: 144}
+......      );
+    </script>
+
+
+  </div>
+  <!---------------->
+<div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">
+<div id="graphdiv1" style="clear:both;width:500px;height:200px;"></div><script type="text/javascript">
+g = new Dygraph(document.getElementById("graphdiv1"),
+"fecha,presion\n"
+{% for i in embalse %}
++"{{ i.fecha|date:"Y/m/d H:i:s" }},{{ i.presion }}\n"
+{% endfor %},{rollPeriod: 1, showRangeSelector: true,
+ylabel: 'presion',
+rangeSelectorPlotFillColor:'lightblue',
+colors: "#ffffff", //color serie
+});</script></div></div>
+
+
+
+
+
+
+
+
+  <!---------------->
+
+  <div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">Velocidad Viento:</div></div>
+  <div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">Velocidad refagas de viento:</div></div>
+  <div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">Temperatura:</div></div>
+  <div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">RH:</div></div>
+  <div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">Punto de rocio:</div></div>
+  <div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">Radiacion Solar:</div></div>
+  <div class="row circleStats"><div class="col-md-2 col-sm-4 col-xs-6">Lluvia:</div></div>
+
+{% endblock %}   

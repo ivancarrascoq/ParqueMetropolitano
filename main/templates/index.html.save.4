@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{#% load staticfiles %#}
+{% load app_filters %}
+{% load static %}
+{% block title %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Mediciones Actuales</h1>
+	<!--h1>{{ hour }} {{ ping.first.created_at }} {{ping.temperatura }}</h1-->
+	<h1>{#{embalse.first.fecha|date:"Y-m-d h:m:s" }#} {#{hum.last.humedad}#}</h1>
+                </div>
+            </div>
+{% endblock title %}
+{% block content %}   
+  <!--div class="row circleStats">
+    <div class="col-md-2 col-sm-4 col-xs-6">
+      Registros procesados: {#{ embalse.count }#} 1. {#{ '1'|graf }#} 2.{{ '576'|graf }}
+    </div>
+  </div-->
+
+
+<!--start array--->
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Temperatura</legend>
+        <div class="row"><div class="col-sm-6">Actual</div><div class="col-sm-6">{{ tactual.temperatura }}</div></div>
+        <div class="row"><div class="col-sm-6">Max</div><div class="col-sm-6">{{ tmax.temperatura }} - {{ tmax.fecha|date:"H:i" }}</div></div>
+        <div class="row"><div class="col-sm-6">Min</div><div class="col-sm-6">{{ tmin.temperatura }} - {{ tmin.fecha|date:"H:i" }}</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>Presion</legend>
+        <div class="row"><div class="col-sm-6">Actual</div><div class="col-sm-6">{{ presion.presion_nm }}</div></div>
+        <div class="row"><div class="col-sm-6">Tendencia</div><div class="col-sm-6"></div></div>      
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Humedad</legend>
+        <div class="row"><div class="col-sm-6">Actual</div><div class="col-sm-6">{{ hactual.humedad}}</div></div>
+        <div class="row"><div class="col-sm-6">Max</div><div class="col-sm-6">{{hmax.humedad}} - {{hmax.fecha|date:"H:i"}}</div></div>
+        <div class="row"><div class="col-sm-6">Min</div><div class="col-sm-6">{{hmin.humedad}} - {{hmin.fecha|date:"H:i"}}</div></div>      
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>Radiacion</legend>
+        <div class="row"><div class="col-sm-6">Actual</div><div class="col-sm-6">{{ractual.radiacion}}</div></div>
+        <div class="row"><div class="col-sm-6">Max</div><div class="col-sm-6">{{rmax.radiacion}} - {{hmax.fecha|date:"H:i"}}</div></div>
+        <div class="row"><div class="col-sm-6">Min</div><div class="col-sm-6">{{rmin.radiacion}} - {{hmax.fecha|date:"H:i"}}</div></div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Viento</legend>
+        <div class="row"><div class="col-sm-6">Velocidad</div><div class="col-sm-6">{{viento.viento_vel_km}}</div></div>
+        <div class="row"><div class="col-sm-6">Direccion</div><div class="col-sm-6">{{viento.viento_simbolo}}</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>PAR</legend>
+        <div class="row"><div class="col-sm-6">Actual</div><div class="col-sm-6">{</div></div>
+        <div class="row"><div class="col-sm-6">Max</div><div class="col-sm-6"></div></div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">        
+    <div class="col-sm-6">
+      <fieldset><legend>Precipitaciones</legend>
+        <div class="row"><div class="col-sm-6">Actual</div><div class="col-sm-6"></div></div>
+        <div class="row"><div class="col-sm-6">Intensidad</div><div class="col-sm-6"></div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>ETo</legend>
+        <div class="row"><div class="col-sm-6">Ayer</div><div class="col-sm-6"></div></div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Estanque</legend>
+        <div class="row"><div class="col-sm-6">Volumen Actual</div><div class="col-sm-6"></div></div>
+        <div class="row"><div class="col-sm-6">Tasa Llenado</div><div class="col-sm-6"></div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>Embalse</legend>
+        <div class="row"><div class="col-sm-6">Volumen Actual</div><div class="col-sm-6"></div></div>
+        <div class="row"><div class="col-sm-6">Tasa Llenado</div><div class="col-sm-6"></div></div>
+      </fieldset>
+    </div>
+
+    <div class="col-sm-6">
+      <fieldset><legend>Temperatura Punto de Rocio</legend>
+        <div class="row"><div class="col-sm-6">Actual</div><div class="col-sm-6"></div></div>
+      </fieldset>
+    </div>
+
+
+  </div>
+<!--end array--->
+
+
+
+{% endblock %}   

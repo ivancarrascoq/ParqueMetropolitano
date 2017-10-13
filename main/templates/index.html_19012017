@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<!--diseno-->           
+<style>
+.row {/*color: #337ab7;*/}
+.row1 {    background-color: #eee;}
+.row2 {    background-color: none;}    
+</style>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">&Uacute;ltima captura: {{actual.fecha|date:"d/m/o H:i"}} </h2>
+        <!--h1>{{ hour }} {{ ping.first.created_at }} {{ping.temperatura }}</h1-->
+        <h1>{#{embalse.first.fecha|date:"Y-m-d h:m:s" }#} {#{hum.last.humedad}#}</h1>
+                </div>
+            </div>
+{% endblock title %}
+
+{% block content %}
+
+<!--start array--->
+
+<!-----estanqe, embalse----->
+
+  <div class="row circleStats">      
+    <div class="col-sm-12">
+      <fieldset><legend>S1EA (Estanque)</legend>
+        <div class="col-xs-9" style="padding-left: 0px;">
+          <div class="row row1"><div class="col-xs-6">Volumen Actual</div><div class="col-xs-6">{{ estanque.nivel_m3 }} [m<sup>3</sup>]</div></div>
+          <div class="row row2"><div class="col-xs-6">Tasa {% if caudal_es >= 0 %}Llenado{% else %}Vaciado{% endif %}</div><div class="col-xs-6">{{ caudal_es }} [m<sup>3</sup>/min]</div></div>
+          <div class="row row1"><div class="col-xs-6">Altura</div><div class="col-xs-6">{{actual_144.es_alt|floatformat:"2"}} [mts]</div></div>
+          <div class="row"><div class="col-xs-6">% de llenado</div><div class="col-xs-6">{{ es_percent|floatformat:"1" }} [%]</div></div>
+        </div>
+        <div class="col-xs-3" style="padding-left: 0px;">
+          <svg id="fillgauge1" width="100" height="100"></svg><script language="JavaScript">var config1 = liquidFillGaugeDefaultSettings();config1.circleColor = "#192b2f";config1.textColor = "#192b2f";config1.waveTextColor = "#FFFFFF";config1.waveColor = "#192b2f";config1.circleThickness = 0.005;config1.textVertPosition = 0.5;config1.waveAnimateTime = 1000;var gauge2= loadLiquidFillGauge("fillgauge1",{{es_percent|floatformat:"1"}}, config1);</script>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">
+    <div class="col-sm-12">
+      <fieldset><legend>N1EM (Embalse)</legend>
+        <div class="col-xs-9" style="padding-left: 0px;">
+          <div class="row row1"><div class="col-xs-6">Volumen Actual</div><div class="col-xs-6">{{ embalse.nivel_m3 }} [m<sup>3</sup>]</div></div>
+          <div class="row"><div class="col-xs-6">Tasa {% if caudal_em >= 0 %}Llenado{% else %}Vaciado{% endif %}</div><div class="col-xs-6">{{ caudal_em}} [m<sup>3</sup>/min]</div></div>
+          <div class="row row1"><div class="col-xs-6">Altura</div><div class="col-xs-6">{{actual_144.em_alt|floatformat:"2"}} [mts]</div></div>
+          <div class="row"><div class="col-xs-6">% de llenado</div><div class="col-xs-6">{{em_percent|floatformat:"1"}} [%]</div></div>
+        </div>
+        <div class="col-xs-3" style="padding-left: 0px;">
+          <svg id="fillgauge2" width="100" height="100"></svg><script language="JavaScript">var config2 = liquidFillGaugeDefaultSettings();config2.circleColor = "#11094d";config2.textColor = "#11094d";config2.waveTextColor = "#FFFFFF";config2.waveColor = "#11094d";config2.circleThickness = 0.005;config2.textVertPosition = 0.5;config2.waveAnimateTime = 1000;var gauge3= loadLiquidFillGauge("fillgauge2",{{em_percent|floatformat:"1"}}, config2);</script>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+
+
+
+<!---->
+
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Temperatura</legend>
+        <div class="row"><div class="col-xs-6"></div><div class="col-xs-3">Valor</div><div class="col-xs-3">Hora</div></div>
+        <div class="row row1"><div class="col-xs-6">T. Actual</div><div class="col-xs-6">{{actual.temperatura}}{#{ tactual.temperatura }#} [&#x2103;]</div></div>
+        <div class="row"><div class="col-xs-6">T. M&aacute;x</div><div class="col-xs-3">{{actual_144.tmax}} [&#x2103;]</div><div class="col-xs-3">{{actual_144.tmaxh|date:"H:i"}}{#{ tmax.fecha|date:"H:i" }#}</div></div>
+        <div class="row row1"><div class="col-xs-6">T. Min</div><div class="col-xs-3">{{actual_144.tmin}} [&#x2103;]</div><div class="col-xs-3">{{ actual_144.tminh|date:"H:i" }}</div></div>
+        <div class="row"><div class="col-xs-6">&Iacute;ndice de Calor</div><div class="col-xs-6">{{actual_144.i_calor}} [&#x2103;]</div></div>
+        <div class="row row1"><div class="col-xs-6">&Iacute;ndice de Fr&iacute;o</div><div class="col-xs-6">{{actual_144.i_frio}} [&#x2103;]</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>Presion</legend>
+        <div class="row row1"><div class="col-xs-6">P. nivel mar Actual</div><div class="col-xs-6">{{presion_nm|floatformat:"1"}}{#{ presion.presion_nm }#} [mb]</div></div>
+        <div class="row"><div class="col-xs-6">P. estaci&oacute;n Actual</div><div class="col-xs-6">{{actual.presion}}{#{ presion.presion }#} [mb]</div></div>
+        <div class="row row1"><div class="col-xs-6">Tendencia 3 &uacute;ltimas horas</div><div class="col-xs-6">{{actual_144.p_tendencia}}</div></div>      
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Humedad Relativa</legend>
+        <div class="row"><div class="col-xs-6"></div><div class="col-xs-3">Valor</div><div class="col-xs-3">Hora</div></div>
+        <div class="row row1"><div class="col-xs-6">H.R. Actual</div><div class="col-xs-3">{{ actual.humedad}}%</div></div>
+        <div class="row"><div class="col-xs-6">H.R. Max</div><div class="col-xs-3">{#{hmax.humedad}#}{{actual_144.hmax}}%</div><div class="col-xs-3">{#{hmax.fecha|date:"H:i"}#}{{actual_144.hmaxh|date:"H:i"}}</div></div>
+        <div class="row row1"><div class="col-xs-6">H.R. Min</div><div class="col-xs-3">{{actual_144.hmin}}%</div><div class="col-xs-3">{{actual_144.hminh|date:"H:i"}}</div></div>      
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>Radiacion</legend>
+        <div class="row"><div class="col-xs-6"></div><div class="col-xs-3">Valor</div><div class="col-xs-3">Hora</div></div>
+        <div class="row row1"><div class="col-xs-6">R. Actual</div><div class="col-xs-3">{{actual.radiacion}} [W/m<sup>2</sup>]</div></div>
+        <div class="row"><div class="col-xs-6">R. Max</div><div class="col-xs-3">{{actual_144.rmax}}{#{rmax.radiacion}#} [W/m<sup>2</sup>]</div><div class="col-xs-3">{#{rmax.fecha|date:"H:i"}#}{{actual_144.rmaxh|date:"H:i"}}</div></div>
+        <!--div class="row"><div class="col-sm-6">R. Min</div><div class="col-xs-6">{#{rmin.radiacion}#} [W/m<sup>2</sup>] - {{rmin.fecha|date:"H:i"}}</div></div-->
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Viento</legend>
+        <div class="row row1"><div class="col-xs-6">Velocidad media</div><div class="col-xs-6">{{ viento.vel }} [Km/h]</div></div>
+        <div class="row"><div class="col-xs-6">Direccion V.</div><div class="col-xs-6">{{viento.simbolo}}</div></div>
+        <div class="row row1"><div class="col-xs-6">R&aacute;fagas V.</div><div class="col-xs-6">{{viento.raf}} [km/h]</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>PAR</legend>
+        <div class="row"><div class="col-xs-6"></div><div class="col-xs-3">Valor</div><div class="col-xs-3">Hora</div></div>
+        <div class="row row1"><div class="col-xs-6">PAR Actual</div><div class="col-xs-3">{{actual.par}} [&#181;mol/m<sup>2</sup>/s]</div></div>
+        <div class="row"><div class="col-xs-6">PAR Max</div><div class="col-xs-3">{#{parmax.par}#}{{actual_144.parmax}} [&#181;mol/m<sup>2</sup>/s]</div><div class="col-xs-3">{#{parmax.fecha|date:"H:i"}#}{{actual_144.parmaxh|date:"H:i"}}</div></div>
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="row circleStats">        
+    <div class="col-sm-6">
+      <fieldset><legend>Precipitaciones</legend>
+        <div class="row row1"><div class="col-xs-6">P. Actual</div><div class="col-xs-6">{{precip.lluvia}} [mm/h]</div></div>
+        <div class="row"><div class="col-xs-6">P. Intensidad</div><div class="col-xs-6">{{precip.intensidad}} [mm/h]</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>ETo</legend>
+        <div class="row row1"><div class="col-xs-6">ETo Ayer</div><div class="col-xs-6">{{eto.ETo}} [mm/d&iacute;a]</div></div>
+      </fieldset>
+    </div>
+  </div>
+
+
+  <div class="row circleStats">
+    <div class="col-sm-12" style="margin-bottom: 15px;">
+      <fieldset><legend>Temperatura Punto de Rocio</legend>
+        <div class="row row1"><div class="col-xs-6">Actual</div><div class="col-xs-6">{{actual.puntorocio}} [&#x2103;]</div></div>
+      </fieldset>         
+    </div>
+  </div>
+
+
+
+{% endblock %}

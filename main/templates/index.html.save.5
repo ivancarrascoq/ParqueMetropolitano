@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{#% load staticfiles %#}
+{% load app_filters %}
+{% load static %}
+{% block title %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">&Uacute;ltima captura: {{tactual.fecha|date:"d/m/o H:i"}} </h1>
+	<!--h1>{{ hour }} {{ ping.first.created_at }} {{ping.temperatura }}</h1-->
+	<h1>{#{embalse.first.fecha|date:"Y-m-d h:m:s" }#} {#{hum.last.humedad}#}{% estanque.nivel_m3 * 100 %.................}</h1>
+                </div>
+            </div>
+{% endblock title %}
+{% block content %}   
+  <!--div class="row circleStats">
+    <div class="col-md-2 col-sm-4 col-xs-6">
+      Registros procesados: {#{ embalse.count }#} 1. {#{ '1'|graf }#} 2.{{ '576'|graf }}
+    </div>
+  </div-->
+
+
+<!--start array--->
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Temperatura</legend>
+        <div class="row"><div class="col-xs-6">T. Actual</div><div class="col-xs-6">{{ tactual.temperatura }} [&#x2103;]</div></div>
+        <div class="row"><div class="col-xs-6">T. Max</div><div class="col-xs-6">{{ tmax.temperatura }} [&#x2103;] - {{ tmax.fecha|date:"H:i" }}</div></div>
+        <div class="row"><div class="col-xs-6">T. Min</div><div class="col-xs-6">{{ tmin.temperatura }} [&#x2103;] - {{ tmin.fecha|date:"H:i" }}</div></div>
+        <div class="row"><div class="col-xs-6">&Iacute;ndice de Calor</div><div class="col-xs-6">  </div></div>
+        <div class="row"><div class="col-xs-6">Sensaci&oacute;n T&eacute;rmica</div><div class="col-xs-6">  [&#x2103;]</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>Presion</legend>
+        <div class="row"><div class="col-xs-6">P. nivel mar Actual</div><div class="col-xs-6">{{ presion.presion_nm }} [mb]</div></div>
+        <div class="row"><div class="col-xs-6">P. estaci&oacute;n Actual</div><div class="col-xs-6">{{ presion.presion }} [mb]</div></div>
+        <div class="row"><div class="col-xs-6">Tendencia 3 &uacute;ltimas horas</div><div class="col-xs-6"></div></div>      
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Humedad Relativa</legend>
+        <div class="row"><div class="col-xs-6">H.R. Actual</div><div class="col-xs-6">{{ hactual.humedad}}%</div></div>
+        <div class="row"><div class="col-xs-6">H.R. Max</div><div class="col-xs-6">{{hmax.humedad}}% - {{hmax.fecha|date:"H:i"}}</div></div>
+        <div class="row"><div class="col-xs-6">H.R. Min</div><div class="col-xs-6">{{hmin.humedad}}% - {{hmin.fecha|date:"H:i"}}</div></div>      
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>Radiacion</legend>
+        <div class="row"><div class="col-xs-6">R. Actual</div><div class="col-xs-6">{{ractual.radiacion}} [W/m<sup>2</sup>]</div></div>
+        <div class="row"><div class="col-xs-6">R. Max</div><div class="col-xs-6">{{rmax.radiacion}} [W/m<sup>2</sup>] - {{rmax.fecha|date:"H:i"}}</div></div>
+        <!--div class="row"><div class="col-sm-6">R. Min</div><div class="col-xs-6">{{rmin.radiacion}} [W/m<sup>2</sup>] - {{rmin.fecha|date:"H:i"}}</div></div-->
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>Viento</legend>
+        <div class="row"><div class="col-xs-6">Velocidad media</div><div class="col-xs-6">{{viento.viento_vel_km}} [Km/h]</div></div>
+        <div class="row"><div class="col-xs-6">Direccion V.</div><div class="col-xs-6">{{viento.viento_simbolo}}</div></div>
+        <div class="row"><div class="col-xs-6">R&aacute;fagas V.</div><div class="col-xs-6">{{viento.viento_raf_km}} [km/h]</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>PAR</legend>
+        <div class="row"><div class="col-xs-6">PAR Actual</div><div class="col-xs-6">{{par.par}} [&#181;mol/m<sup>2</sup>/s]</div></div>
+        <div class="row"><div class="col-xs-6">PAR Max</div><div class="col-xs-6">{{parmax.par}} [&#181;mol/m<sup>2</sup>/s] - {{parmax.fecha|date:"H:i"}}</div></div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">        
+    <div class="col-sm-6">
+      <fieldset><legend>Precipitaciones</legend>
+        <div class="row"><div class="col-xs-6">P. Actual</div><div class="col-xs-6">{{precip.lluvia}} [mm/h]</div></div>
+        <div class="row"><div class="col-xs-6">P. Intensidad</div><div class="col-xs-6">{{precip.intensidad}} [mm/h]</div></div>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>ETo</legend>
+        <div class="row"><div class="col-xs-6">ETo Ayer</div><div class="col-xs-6">{{eto.ETo}} [mm/d&iacute;a]</div></div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row circleStats">      
+    <div class="col-sm-6">
+      <fieldset><legend>S1EA (Estanque)</legend>
+        <div class="row"><div class="col-xs-6">Volumen Actual</div><div class="col-xs-6">{{ estanque.nivel_m3 }} [m<sup>3</sup>]</div></div>
+        <div class="row"><div class="col-xs-6">Tasa {% if caudal_es.caudal_m3min >= 0 %}Llenado{% else %}Vaciado{% endif %}</div><div class="col-xs-6">{{ caudal_es.caudal_m3min }} [m<sup>3</sup>/min]</div></div>
+        <div class="row"><div class="col-xs-6">Altura</div><div class="col-xs-6"> [mts]</div></div>
+        <div class="row"><div class="col-xs-6">% de llenado</div><div class="col-xs-6">{{ estanque.nivel_m3 }} [%]</div></div>
+<svg id="fillgauge1" width="97%" height="250"></svg>
+<script language="JavaScript">
+    var config1 = liquidFillGaugeDefaultSettings();
+    config1.circleColor = "#37626b";
+    config1.textColor = "#37626b";
+    config1.waveTextColor = "#FFFFFF";
+    config1.waveColor = "#37626b";
+    config1.circleThickness = 0.005;
+    config1.textVertPosition = 0.2;
+    config1.waveAnimateTime = 1000;
+    var gauge2= loadLiquidFillGauge("fillgauge1",60, config1);
+</script>
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      <fieldset><legend>N1EM (Embalse)</legend>
+        <div class="row"><div class="col-xs-6">Volumen Actual</div><div class="col-xs-6">{{ embalse.nivel_m3 }} [m<sup>3</sup>]</div></div>
+        <div class="row"><div class="col-xs-6">Tasa {% if caudal_em.caudal_m3min >= 0 %}Llenado{% else %}Vaciado{% endif %}</div><div class="col-xs-6">{{ caudal_em.caudal_m3min}} [m<sup>3</sup>/min]</div></div>
+        <div class="row"><div class="col-xs-6">Altura</div><div class="col-xs-6"> [mts]</div></div>
+        <div class="row"><div class="col-xs-6">% de llenado</div><div class="col-xs-6"> [%]</div></div>
+      </fieldset>
+    </div>
+
+    <div class="col-sm-6">
+      <fieldset><legend>Temperatura Punto de Rocio</legend>
+        <div class="row"><div class="col-xs-6">Actual</div><div class="col-xs-6">{{procio.puntorocio}} [&#x2103;]</div></div>
+      </fieldset>
+    </div>
+
+
+  </div>
+<!--end array--->
+
+
+
+{% endblock %}   
